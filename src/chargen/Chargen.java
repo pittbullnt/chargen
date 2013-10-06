@@ -4,13 +4,41 @@
  */
 package chargen;
 
+import java.util.HashMap;
+
 /**
  *
  * @author Administrator
  */
 public class Chargen
 {
-    static char[] getRow (int idx)
+    HashMap<Character,Integer> map = new HashMap<>();
+    
+    public Chargen()
+    {
+        map.put ('[',0x8d8);
+        //map.put (); // Pound
+        map.put (']',0x8e8);
+        map.put ('^',0x8f0);
+        map.put (' ',0x900);
+        map.put ('!',0x908);
+        map.put ('"',0x910);
+        map.put ('#',0x918);
+        map.put ('$',0x920);
+        map.put ('%',0x928);
+        map.put ('&',0x930);
+        map.put ('\'',0x938);
+        map.put ('(',0x940);
+        map.put (')',0x948);
+        map.put ('*',0x950);
+        map.put ('+',0x958);
+        map.put (',',0x960);
+        map.put ('-',0x968);
+        map.put ('.',0x970);
+        map.put ('/',0x978);
+    }
+    
+    private char[] getRow (int idx)
     {
         char[] chrs = {' ',' ',' ',' ',' ',' ',' ',' ',};
         int c = c64Chargen[idx];
@@ -26,7 +54,7 @@ public class Chargen
         return chrs;
     }
     
-    static char[][] getRows (int idx)
+    private char[][] getRows (int idx)
     {
         char[][] res = new char[8][8];
         for (int s=0; s<8; s++)
@@ -34,7 +62,7 @@ public class Chargen
         return res;
     }
     
-    static String getCharAt (int idx)
+    private String getCharAt (int idx)
     {
         StringBuilder out = new StringBuilder();
         for (int s=0; s<8; s++)
@@ -42,10 +70,10 @@ public class Chargen
         return out.toString();
     }
     
-    static String getLine (int... chars)
+    public String getLine (int... chars)
     {
         StringBuilder out = new StringBuilder();
-        char[][][] all = new char[8][8][chars.length];
+        char[][][] all = new char[chars.length][8][8];
         for (int s=0; s<chars.length; s++)
             all[s] = getRows(chars[s]);
         
@@ -62,18 +90,43 @@ public class Chargen
         return out.toString();
     }
     
+    public String translatedLine (String in)
+    {
+        int[] idxs = new int[in.length()];
+        
+        for (int s=0; s<in.length(); s++)
+        {
+            char c = in.charAt(s);
+            if (c >= 'A' && c <= 'Z')
+                idxs[s] = (c-'A'+1)*8;
+            else if (c >= 'a' && c <= 'z')
+                idxs[s] = (c-'a'+1)*8 + 0x800;
+            else if (c >= '0' && c <= '9')
+                idxs[s] = (c-'0')*8 + 0x980;
+            else if (map.containsKey(c))
+                idxs[s] = map.get(c);
+            else
+                idxs[s] = 0x298;  // dummy heart
+        }
+        return getLine (idxs);
+    }
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args)
     {
+        Chargen g = new Chargen();
         //System.out.println (getCharAt(0));
-        //System.out.println (getCharAt(8));
+        //System.out.println (gtCharAt(8));
         //System.out.println (getCharAt(16));
         
-        System.out.println (getLine (0,8,16));
-        System.out.println (getLine (0x800+8,0x800+16,0x800+24));
+        //System.out.println (getLine (0,8,16));
+        //System.out.println (getLine (0x800+8,0x800+16,0x800+24));
+        //System.out.println (translatedLine("HALLO b"));
+        //System.out.println (translatedLine("0123456789"));
+        System.out.println (g.translatedLine("THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG"));
+        System.out.println (g.translatedLine("0123456789+-*/"));
     }
 
 public static final byte[] c64Chargen =

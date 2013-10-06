@@ -10,7 +10,7 @@ package chargen;
  */
 public class Chargen
 {
-    static String getRow (int idx)
+    static char[] getRow (int idx)
     {
         char[] chrs = {' ',' ',' ',' ',' ',' ',' ',' ',};
         int c = c64Chargen[idx];
@@ -23,12 +23,12 @@ public class Chargen
             //    out +=" ";
             i >>>=1;
         }
-        return new String (chrs);
+        return chrs;
     }
     
-    static String[] getRows (int idx)
+    static char[][] getRows (int idx)
     {
-        String[] res = new String[8];
+        char[][] res = new char[8][8];
         for (int s=0; s<8; s++)
             res[s] = getRow(idx++);
         return res;
@@ -45,7 +45,7 @@ public class Chargen
     static String getLine (int... chars)
     {
         StringBuilder out = new StringBuilder();
-        String[][] all = new String[8][chars.length];
+        char[][][] all = new char[8][8][chars.length];
         for (int s=0; s<chars.length; s++)
             all[s] = getRows(chars[s]);
         

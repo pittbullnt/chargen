@@ -12,13 +12,85 @@ import java.util.HashMap;
  */
 public class Chargen
 {
-    HashMap<Character, Integer> map = new HashMap<>();
-
+    private final HashMap<Character, Integer> map = new HashMap<>();
+    private char pixel = 'O';
+    
+    public Chargen (char pix)
+    {
+        this();
+        pixel = pix;
+    }
+    
     /**
      * Constructor, fills the char map
      */
     public Chargen()
     {
+        map.put('0', 0x980);
+        map.put('1', 0x988);
+        map.put('2', 0x990);
+        map.put('3', 0x998);
+        map.put('4', 0x9a0);
+        map.put('5', 0x9a8);
+        map.put('6', 0x9b0);
+        map.put('7', 0x9b8);
+        map.put('8', 0x9c0);
+        map.put('9', 0x9c8);
+
+        map.put('a', 0x808);
+        map.put('b', 0x810);
+        map.put('c', 0x818);
+        map.put('d', 0x820);
+        map.put('e', 0x828);
+        map.put('f', 0x830);
+        map.put('g', 0x838);
+        map.put('h', 0x840);
+        map.put('i', 0x848);
+        map.put('j', 0x850);
+        map.put('k', 0x858);
+        map.put('l', 0x860);
+        map.put('m', 0x868);
+        map.put('n', 0x870);
+        map.put('o', 0x878);
+        map.put('p', 0x880);
+        map.put('q', 0x888);
+        map.put('r', 0x890);
+        map.put('s', 0x898);
+        map.put('t', 0x8a0);
+        map.put('u', 0x8a8);
+        map.put('v', 0x8b0);
+        map.put('w', 0x8b8);
+        map.put('x', 0x8c0);
+        map.put('y', 0x8c8);
+        map.put('z', 0x8d0);
+
+        map.put('A', 0x008);
+        map.put('B', 0x010);
+        map.put('C', 0x018);
+        map.put('D', 0x020);
+        map.put('E', 0x028);
+        map.put('F', 0x030);
+        map.put('G', 0x038);
+        map.put('H', 0x040);
+        map.put('I', 0x048);
+        map.put('J', 0x050);
+        map.put('K', 0x058);
+        map.put('L', 0x060);
+        map.put('M', 0x068);
+        map.put('N', 0x070);
+        map.put('O', 0x078);
+        map.put('P', 0x080);
+        map.put('Q', 0x088);
+        map.put('R', 0x090);
+        map.put('S', 0x098);
+        map.put('T', 0x0a0);
+        map.put('U', 0x0a8);
+        map.put('V', 0x0b0);
+        map.put('W', 0x0b8);
+        map.put('X', 0x0c0);
+        map.put('Y', 0x0c8);
+        map.put('Z', 0x0d0);
+
         map.put('[', 0x8d8);
         //map.put (); // Pound
         map.put(']', 0x8e8);
@@ -58,7 +130,7 @@ public class Chargen
         {
             if ((c & i) == i)
             {
-                chrs[s] = 'O';  // character thst ia used to define a pixel
+                chrs[s] = pixel;
             }
             i >>>= 1;
         }
@@ -134,26 +206,10 @@ public class Chargen
         for (int s = 0; s < in.length(); s++)
         {
             char c = in.charAt(s);
-            if (c >= 'A' && c <= 'Z')
-            {
-                idxs[s] = (c - 'A' + 1) * 8;
-            }
-            else if (c >= 'a' && c <= 'z')
-            {
-                idxs[s] = (c - 'a' + 1) * 8 + 0x800;
-            }
-            else if (c >= '0' && c <= '9')
-            {
-                idxs[s] = (c - '0') * 8 + 0x980;
-            }
-            else if (map.containsKey(c))
-            {
+            if (map.containsKey(c))
                 idxs[s] = map.get(c);
-            }
             else
-            {
                 idxs[s] = 0x298;  // dummy heart
-            }
         }
         return getLine(idxs);
     }
@@ -163,7 +219,7 @@ public class Chargen
      */
     public static void main(String[] args)
     {
-        Chargen g = new Chargen();
+        Chargen g = new Chargen('*');
         //System.out.println (getCharAt(0));
         //System.out.println (gtCharAt(8));
         //System.out.println (getCharAt(16));
@@ -173,6 +229,7 @@ public class Chargen
         //System.out.println (translatedLine("HALLO b"));
         //System.out.println (translatedLine("0123456789"));
         System.out.println(g.translatedLine("THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG"));
+        System.out.println(g.translatedLine("the quick brown fox jumps over the lazy dog"));
         System.out.println(g.translatedLine("0123456789+-*/"));
     }
     
